@@ -5,7 +5,7 @@ const { viewAllEmployees } = require("./db/employees");
 const { addDepartment } = require("./db/addDepartment");
 const { updateRole } = require("./db/updateRole");
 
-const backToStart = () => setTimeout(() => start(), 1000);
+const backToStart = () => setTimeout(() => start(), 2000);
 
 console.log("Welcome to the Employee Manager!");
 // use ASYNC & AWAIT for all of your promises
@@ -33,7 +33,6 @@ const start = async () => {
         case "View all departments":
             const departments = await viewAllDepartments();
             console.table(departments);
-            console.log("\n");
             backToStart();
             break;
         case "View all employees":
@@ -66,7 +65,10 @@ const start = async () => {
 
             backToStart();
             break;
-
+        // TODO
+        case "Add a role":
+            backToStart();
+            break;
         case "Update an employee role":
             // array of role objects
             const updateRolesView = await viewAllRoles();
@@ -101,18 +103,26 @@ const start = async () => {
             backToStart();
             break;
 
+        case "Exit":
+            // method to exit program
+            process.on("exit", function (code) {
+                return console.log(`Goodbye!`);
+            });
+            setTimeout(function () {
+                return process.exit(22);
+            }, 300);
+
         // case "Add a role": DONE
         // case "Add an employee": DONE
         // case "Update an employee role": DONE
-        // case "Exit":
     }
 };
 
 start();
 
 // TODO FOR TUTORING SESSION:
-// adding into database
-// back option for view employees/departments/roles
+// adding into database DONE
+// back option for view employees/departments/roles DONE
 
 // EXTRA TODOS:
 // show a list of managers/employees
