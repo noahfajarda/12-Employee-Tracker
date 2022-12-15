@@ -6,9 +6,7 @@ const {
     viewAllEmployees,
     viewManagers,
 } = require("./db/view");
-const { addDepartment } = require("./db/addDepartment");
-const { addRole } = require("./db/addRole");
-const { addEmployee } = require("./db/addEmployee");
+const { addDepartment, addRole, addEmployee } = require("./db/add");
 const { updateRole } = require("./db/updateRole");
 
 const backToStart = () => setTimeout(() => start(), 2000);
@@ -26,7 +24,7 @@ const start = async () => {
                 "View all departments",
                 "View all roles",
                 "View all employees",
-                "View managers",
+                "View all managers",
                 "Add a department",
                 "Add a role",
                 "Add an employee",
@@ -47,7 +45,7 @@ const start = async () => {
             console.table(employees);
             backToStart();
             break;
-        case "View managers":
+        case "View all managers":
             const managers = await viewManagers();
             console.table(managers);
             backToStart();
@@ -68,7 +66,6 @@ const start = async () => {
             ]);
 
             const createdDepartment = await addDepartment(newDepartment);
-            // console.log(createdDepartment.affectedRows);
 
             if (createdDepartment) {
                 const updatedDepartments = await viewAllDepartments();
@@ -139,7 +136,7 @@ const start = async () => {
                 name: "** This Employee Does Not Have A Manager **",
                 value: "NULL",
             });
-            const { addFirst, addLast, addRole, addManager } = await prompt([
+            const { addFirst, addLast, addNewRole, addManager } = await prompt([
                 {
                     type: "input",
                     name: "addFirst",
@@ -152,7 +149,7 @@ const start = async () => {
                 },
                 {
                     type: "list",
-                    name: "addRole",
+                    name: "addNewRole",
                     message: "What is their role?",
                     choices: addRoleNewEmployee,
                 },
@@ -167,7 +164,7 @@ const start = async () => {
             const newEmployee = await addEmployee(
                 addFirst,
                 addLast,
-                addRole,
+                addNewRole,
                 addManager
             );
 
