@@ -1,16 +1,16 @@
-
 {
     "name": "employee-tracker",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
     "scripts": {
-      "start": "node index"
+        "start": "node index"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
-      "inquirer": "8.2.4",
-      "mysql2": "^2.1.0"
+        "figlet": "^1.5.2",
+        "inquirer": "8.2.4",
+        "mysql2": "^2.1.0"
     }
-  }  
+}

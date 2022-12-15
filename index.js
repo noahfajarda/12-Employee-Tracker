@@ -9,7 +9,11 @@ const {
 const { addDepartment, addRole, addEmployee } = require("./db/add");
 const { updateRole } = require("./db/updateRole");
 
-const backToStart = () => setTimeout(() => start(), 2000);
+const backToStart = () =>
+    setTimeout(() => {
+        console.log("\n");
+        start();
+    }, 2000);
 
 console.log("Welcome to the Employee Manager!");
 // use ASYNC & AWAIT for all of your promises
@@ -219,3 +223,4 @@ start();
 
 // EXTRA TODOS:
 // show a list of managers/employees
+// implement figlet
