@@ -17,6 +17,8 @@ const backToStart = () =>
     }, 2000);
 
 console.log(
+    // refered to figlet documentation: https://www.npmjs.com/package/figlet
+    // inspiration from mock-up: https://courses.bootcampspot.com/courses/2248/assignments/40012?module_item_id=765978
     figlet.textSync("Welcome to the Employee Manager!", {
         horizontalLayout: "default",
         verticalLayout: "default",
