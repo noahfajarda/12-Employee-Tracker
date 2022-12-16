@@ -1,4 +1,5 @@
 const { prompt } = require("inquirer");
+const figlet = require("figlet");
 const db = require("./db/connection");
 const {
     viewAllDepartments,
@@ -15,7 +16,15 @@ const backToStart = () =>
         start();
     }, 2000);
 
-console.log("Welcome to the Employee Manager!");
+console.log(
+    figlet.textSync("Welcome to the Employee Manager!", {
+        horizontalLayout: "default",
+        verticalLayout: "default",
+        width: 100,
+        whitespaceBreak: true,
+    })
+);
+
 // use ASYNC & AWAIT for all of your promises
 const start = async () => {
     // 2. create prompts for options to view/manipulate database
@@ -73,9 +82,9 @@ const start = async () => {
 
             if (createdDepartment) {
                 const updatedDepartments = await viewAllDepartments();
+                console.log(`Added ${newDepartment} to the database`);
                 console.table(updatedDepartments);
             }
-
             backToStart();
             break;
         // TODO
@@ -116,7 +125,12 @@ const start = async () => {
                 newSalary,
                 assignedDepartment
             );
-            console.log(newRoleAdded);
+
+            if (newRoleAdded) {
+                const updatedRoles = await viewAllRoles();
+                console.log(`Added ${newRole} to the database`);
+                console.table(updatedRoles);
+            }
 
             backToStart();
             break;
@@ -172,6 +186,12 @@ const start = async () => {
                 addManager
             );
 
+            if (newEmployee) {
+                const updatedEmployees = await viewAllEmployees();
+                console.log(`Added ${addFirst} ${addLast} to the database`);
+                console.table(updatedEmployees);
+            }
+
             backToStart();
             break;
         case "Update an employee role":
@@ -204,7 +224,7 @@ const start = async () => {
             ]);
 
             const newEmployeeRole = await updateRole(first, last, role);
-            console.log(newEmployeeRole);
+            console.log(`Updated ${first} ${last}'s role.`);
             backToStart();
             break;
 
@@ -222,5 +242,4 @@ const start = async () => {
 start();
 
 // EXTRA TODOS:
-// show a list of managers/employees
 // implement figlet
