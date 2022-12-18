@@ -12,7 +12,7 @@ async function viewAllRoles() {
         console.log(err);
     }
 }
-
+// first, last, title, dept
 async function viewAllDepartments() {
     try {
         const departments = await db
@@ -31,7 +31,15 @@ async function viewAllEmployees() {
             .promise()
             // SELECT * FROM .... ==== show all available columns
             .query(
-                `SELECT * FROM employee LEFT JOIN role ON employee.role_id = role.id`
+                `SELECT
+                    first_name AS "first name", 
+                    last_name AS "last name", 
+                    title AS role, 
+                    role_id AS "role ID",
+                    name AS department 
+                    FROM employee 
+                    LEFT JOIN role ON employee.role_id = role.id
+                    LEFT JOIN department ON role.department_id = department.id`
             );
         return employees[0];
     } catch (err) {
