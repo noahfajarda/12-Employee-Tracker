@@ -36,6 +36,7 @@ async function viewAllEmployees() {
                     last_name AS "last name", 
                     title AS role, 
                     role_id AS "role ID",
+                    manager_id,
                     name AS department 
                     FROM employee 
                     LEFT JOIN role ON employee.role_id = role.id

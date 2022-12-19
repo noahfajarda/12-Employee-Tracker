@@ -31,17 +31,32 @@ async function addDepartment(department) {
 }
 
 async function addEmployee(firstName, lastName, role_id, manager) {
-    try {
-        const employees = await db
-            .promise()
-            .query(
-                `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${firstName}', '${lastName}', '${role_id}', '${manager}')`
-            );
-        return employees[0];
-    } catch (err) {
-        // show error if it occurs
-        // change color of error, chalk
-        console.log(err.sqlMessage, "\n");
+    if (manager !== "NULL") {
+        try {
+            const employees = await db
+                .promise()
+                .query(
+                    `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${firstName}', '${lastName}', '${role_id}', '${manager}')`
+                );
+            return employees[0];
+        } catch (err) {
+            // show error if it occurs
+            // change color of error, chalk
+            console.log(err.sqlMessage, "\n");
+        }
+    } else {
+        try {
+            const employees = await db
+                .promise()
+                .query(
+                    `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${firstName}', '${lastName}', '${role_id}', NULL)`
+                );
+            return employees[0];
+        } catch (err) {
+            // show error if it occurs
+            // change color of error, chalk
+            console.log(err.sqlMessage, "\n");
+        }
     }
 }
 

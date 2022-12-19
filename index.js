@@ -9,6 +9,8 @@ const {
 } = require("./db/view");
 const { addDepartment, addRole, addEmployee } = require("./db/add");
 const { updateRole } = require("./db/updateRole");
+// helper function to capitalize first letter
+const { capitalizeFirstLetter } = require("./util/upperHelper");
 
 const backToStart = () =>
     setTimeout(() => {
@@ -148,8 +150,8 @@ const start = async () => {
             const addManagerView = await viewAllEmployees();
             // array of all employee
             const addManagerNewEmployee = addManagerView.map((role) => ({
-                name: role.first_name + " " + role.last_name,
-                value: role.id,
+                name: role["first name"] + " " + role["last name"],
+                value: role["role ID"],
             }));
             // add no manager option
             addManagerNewEmployee.unshift({
@@ -180,10 +182,12 @@ const start = async () => {
                     choices: addManagerNewEmployee,
                 },
             ]);
+
             // id & role_id, firstName, lastName, title, salary
             const newEmployee = await addEmployee(
-                addFirst,
-                addLast,
+                // capitalize first letter of names just in case
+                capitalizeFirstLetter(addFirst),
+                capitalizeFirstLetter(addLast),
                 addNewRole,
                 addManager
             );
