@@ -6,6 +6,7 @@ const {
     viewAllRoles,
     viewAllEmployees,
     viewManagers,
+    viewEmployeesByManagers,
 } = require("./db/view");
 const { addDepartment, addRole, addEmployee } = require("./db/add");
 const { updateRole } = require("./db/updateRole");
@@ -41,6 +42,7 @@ const start = async () => {
                 "View all departments",
                 "View all roles",
                 "View all employees",
+                "View employees by manager",
                 "View all managers",
                 "Add a department",
                 "Add a role",
@@ -60,6 +62,28 @@ const start = async () => {
         case "View all employees":
             const employees = await viewAllEmployees();
             console.table(employees);
+            backToStart();
+            break;
+        case "View employees by manager":
+            // array of department objects
+            const managersView = await viewManagers();
+            // array of all departments
+            const managerChoices = managersView.map((manager) => ({
+                name: manager.first_name + " " + manager.last_name,
+                value: manager["Employee ID"],
+            }));
+
+            const { managerID } = await prompt([
+                {
+                    type: "list",
+                    name: "managerID",
+                    message: "Which Manager?",
+                    choices: managerChoices,
+                },
+            ]);
+
+            const employeesByManager = await viewEmployeesByManagers(managerID);
+            console.table(employeesByManager);
             backToStart();
             break;
         case "View all managers":
@@ -91,7 +115,6 @@ const start = async () => {
             }
             backToStart();
             break;
-        // TODO
         case "Add a role":
             // array of department objects
             const updateDepartmentsView = await viewAllDepartments();
@@ -150,8 +173,8 @@ const start = async () => {
             const addManagerView = await viewAllEmployees();
             // array of all employee
             const addManagerNewEmployee = addManagerView.map((role) => ({
-                name: role["first name"] + " " + role["last name"],
-                value: role["role ID"],
+                name: role.first_name + " " + role.last_name,
+                value: role.id,
             }));
             // add no manager option
             addManagerNewEmployee.unshift({
