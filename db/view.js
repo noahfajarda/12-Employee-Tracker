@@ -63,7 +63,12 @@ async function viewManagers() {
             .promise()
             // SELECT * FROM .... ==== show all available columns
             .query(
-                `SELECT employee.id "Employee ID", first_name, last_name, title, salary FROM employee LEFT JOIN role ON employee.role_id = role.id WHERE manager_id IS NULL`
+                `SELECT employee.id "Employee ID"
+                    , first_name
+                    , last_name
+                    , title
+                    , salary 
+                    FROM employee LEFT JOIN role ON employee.role_id = role.id WHERE manager_id IS NULL`
             );
         return employees[0];
     } catch (err) {
@@ -95,10 +100,54 @@ async function viewEmployeesByManagers(managerID) {
     }
 }
 
+async function viewEmployeesByDepartment(department) {
+    try {
+        const employees = await db
+            .promise()
+            // SELECT * FROM .... ==== show all available columns
+            .query(
+                `SELECT e.id "Employee ID"
+                , e.first_name "First Name"
+                , e.last_name "Last Name"
+                , r.title "Role"
+                FROM employee e
+                    LEFT JOIN role r on e.role_id = r.id
+                    LEFT JOIN department d ON r.department_id = d.id
+                    WHERE d.name = '${department}'`
+            );
+        return employees[0];
+    } catch (err) {
+        // show error if it occurs
+        console.log(err);
+    }
+}
+
+async function viewCombinedSalariesDepartment(department) {
+    try {
+        const employees = await db
+            .promise()
+            // SELECT * FROM .... ==== show all available columns
+            .query(
+                `SELECT 
+                SUM(r.salary) AS "Total Utilized Budget"
+                FROM employee e
+                    LEFT JOIN role r on e.role_id = r.id
+                    LEFT JOIN department d ON r.department_id = d.id
+                    WHERE d.name = '${department}'`
+            );
+        return employees[0];
+    } catch (err) {
+        // show error if it occurs
+        console.log(err);
+    }
+}
+
 module.exports = {
     viewAllRoles,
     viewAllDepartments,
     viewAllEmployees,
     viewManagers,
     viewEmployeesByManagers,
+    viewEmployeesByDepartment,
+    viewCombinedSalariesDepartment,
 };

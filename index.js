@@ -7,6 +7,8 @@ const {
     viewAllEmployees,
     viewManagers,
     viewEmployeesByManagers,
+    viewEmployeesByDepartment,
+    viewCombinedSalariesDepartment,
 } = require("./db/view");
 const { addDepartment, addRole, addEmployee } = require("./db/add");
 const { updateRole } = require("./db/updateRole");
@@ -43,6 +45,8 @@ const start = async () => {
                 "View all roles",
                 "View all employees",
                 "View employees by manager",
+                "View employees by department",
+                "View total utilized budget of a department",
                 "View all managers",
                 "Add a department",
                 "Add a role",
@@ -83,7 +87,48 @@ const start = async () => {
             ]);
 
             const employeesByManager = await viewEmployeesByManagers(managerID);
+
+            if (employeesByManager.length == 0) {
+                console.log(
+                    "This manager does not have any employees at the moment."
+                );
+                backToStart();
+                break;
+            }
             console.table(employeesByManager);
+            backToStart();
+            break;
+        case "View employees by department":
+            // array of department objects
+            const departmentView = await viewAllDepartments();
+
+            // array of all departments
+            const departmentOptions = departmentView.map((department) => ({
+                name: department.name,
+                value: department.name,
+            }));
+
+            const { departmentName } = await prompt([
+                {
+                    type: "list",
+                    name: "departmentName",
+                    message: "Which Department?",
+                    choices: departmentOptions,
+                },
+            ]);
+
+            const employeesByDepartment = await viewEmployeesByDepartment(
+                departmentName
+            );
+
+            if (employeesByDepartment.length == 0) {
+                console.log(
+                    "This department does not have any employees at the moment."
+                );
+                backToStart();
+                break;
+            }
+            console.table(employeesByDepartment);
             backToStart();
             break;
         case "View all managers":
@@ -96,6 +141,33 @@ const start = async () => {
             console.table(roles);
             backToStart();
             break;
+        case "View total utilized budget of a department":
+            // array of department objects
+            const budgetDeartmentView = await viewAllDepartments();
+
+            // array of all departments
+            const budgetDeptOptions = budgetDeartmentView.map((department) => ({
+                name: department.name,
+                value: department.name,
+            }));
+
+            const { budgetDepartmentName } = await prompt([
+                {
+                    type: "list",
+                    name: "budgetDepartmentName",
+                    message: "Which Department?",
+                    choices: budgetDeptOptions,
+                },
+            ]);
+
+            const budgetDepartment = await viewCombinedSalariesDepartment(
+                budgetDepartmentName
+            );
+
+            console.table(budgetDepartment);
+            backToStart();
+            break;
+
         case "Add a department":
             const { newDepartment } = await prompt([
                 {
@@ -178,7 +250,7 @@ const start = async () => {
             }));
             // add no manager option
             addManagerNewEmployee.unshift({
-                name: "** This Employee Does Not Have A Manager **",
+                name: "** This Employee Is A Manager **",
                 value: "NULL",
             });
             const { addFirst, addLast, addNewRole, addManager } = await prompt([
